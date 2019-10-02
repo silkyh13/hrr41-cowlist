@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server/app.js",
-    "babel": "babel client --out-dir client/compiled --presets=react --ignore=node_modules,client/compiled --source-maps inline --watch",
-    "build": "webpack --mode production"
+    "build": "webpack --mode development"
   },
   "repository": {
     "type": "git",

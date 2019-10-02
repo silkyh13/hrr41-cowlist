@@ -20,10 +20,9 @@ var controllers = {
         if (err) {
           throw err;
         }
-        // console.log('what is req.body?', req.body)
+        console.log('what is req.body?', req.body);
         res.writeHead(201);
         res.end();
-        // console.log('got milk???');
       });
     }
   }

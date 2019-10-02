@@ -23,9 +23,12 @@ var models = {
     });
   },
   post: function (data, callback) {
+    console.log('data', data);
     var queryString = 'INSERT INTO cows (name, description) VALUES (?, ?)';
     var post = [data.name, data.description];
+    // console.log('post', post);
     db.query(queryString, post, function (error, results, fields) {
+
       if (error) {
         throw error;
       }
