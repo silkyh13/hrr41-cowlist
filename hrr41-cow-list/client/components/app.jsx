@@ -2,31 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import exampleData from '../data/exampleData.js';
 import CowList from './CowList';
-// import CowListEntry from './CowListEntry'
-// Temporary components
-// const CowForm = (props) => {
-//   return (
-//     <form onSubmit={this.handleSubmit}>
-//     <label>
-//       Name:
-//       <input type="text" value={this.state.value} onChange={this.handleChange} />
-//     </label>
-//     <input type="submit" value="Submit" />
-//   </form>
-//   );
-// }
 
 class App extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {value: '', description: ''};
+    this.state = {data: [], value: '', description: '', currentCow: {}};
 
     this.handleUserChange = this.handleUserChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-
+    this.fetchData = this.fetchData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onListItemClick = this.onListItemClick.bind(this);
   }
+  onListItemClick(name, description) {
 
+    // alert(name + ' ' +description);
+    this.setState({currentCow: {name: name, description: description}})
+  }
   handleUserChange(event) {
     this.setState({value: event.target.value});
   }
@@ -34,9 +26,7 @@ class App extends React.Component {
     this.setState({description: event.target.value});
   }
 
-  handleSubmit(event) {
-    // alert('A name was submitted: ' + this.state.value + this.state.description);
-    //send my data to server
+  handleSubmit(event) {//adds name and description of a cow
     event.preventDefault();
     fetch('/api/cows', {
       method: 'POST',
@@ -49,20 +39,48 @@ class App extends React.Component {
         description: this.state.description
       })
     })
-    .then(function(response) {
+    .then((response) => {
       return response.json()
-    }).then(function(body) {
+    }).then((body) => {
       console.log(body);
     });
-
   }
 
+    fetchData () {//fetching data from server
+      fetch('api/cows', {
+        method: 'GET',
+      })
+        .then((items) => {
+          // console.log('does it work?', items.json());
+          return items.json();
+
+        })
+        .then((cowData) => {
+          this.setState({data: cowData});
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+
+    componentDidMount() {//runs before render runs only the first time the component is created
+      this.fetchData();
+    }
+
+    componentDidUpdate(prevProps, prevState) {//anytime the state changes or properties changes, it will run again.
+      if (prevState !== this.state) {
+        // this.fetchData();
+      }
+    }
+
   render() {
+    let name = this.state.currentCow.name
+    let description = this.state.currentCow.description
     return (
       <div>
         <form onSubmit={this.handleSubmit}>
         <label>
-          User:
+          Name:
           <input type="text" value={this.state.value} onChange={this.handleUserChange} />
         </label>
         <label>
@@ -72,10 +90,10 @@ class App extends React.Component {
         <input type="submit" value="Submit" />
       </form>
 
-
+      <div className="example">{name} {description}</div>
       <div className="list">
         <div><h5><em>Cow List</em>
-        <CowList cows={exampleData} />
+        <CowList cows={this.state.data} onClick={this.onListItemClick.bind(this)}/>
         </h5></div>
       </div>
 
