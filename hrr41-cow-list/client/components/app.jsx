@@ -39,11 +39,9 @@ class App extends React.Component {
         description: this.state.description
       })
     })
-    .then((response) => {
-      return response.json()
-    }).then((body) => {
-      console.log(body);
-    });
+    .then(() => {
+      this.fetchData();
+    })
   }
 
     fetchData () {//fetching data from server
@@ -67,11 +65,11 @@ class App extends React.Component {
       this.fetchData();
     }
 
-    componentDidUpdate(prevProps, prevState) {//anytime the state changes or properties changes, it will run again.
-      if (prevState !== this.state) {
-        // this.fetchData();
-      }
-    }
+    // componentDidUpdate(prevProps, prevState) {//anytime the state changes or properties changes, it will run again.
+    //   if (prevState.currentCow !== this.state.currentCow) {//only updates if we switch to current cow
+    //     this.fetchData();
+    //   }
+    // }
 
   render() {
     let name = this.state.currentCow.name
