@@ -24,6 +24,15 @@ var controllers = {
         res.writeHead(201);
         res.end();
       });
+    },
+    delete: function (req, res) {
+      models.delete(req.body, (err, data) => {
+        if (err) {
+          throw err;
+        }
+        res.writeHead(200);
+        res.end();
+      });
     }
   }
 };

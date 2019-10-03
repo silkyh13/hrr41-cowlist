@@ -23,7 +23,7 @@ var models = {
     });
   },
   post: function (data, callback) {
-    console.log('data', data);
+    // console.log('data', data);//{}
     var queryString = 'INSERT INTO cows (name, description) VALUES (?, ?)';
     var post = [data.name, data.description];
     // console.log('post', post);
@@ -34,6 +34,19 @@ var models = {
       }
       callback(null, results);
     });
+  },
+  delete: function (data, callback) {
+    // console.log('what is yuor mom?', data);
+    // console.log('line 39, delete was invoked', data.name);
+    var queryString = 'DELETE from cows where name =' + db.escape(data.name);
+    db.query(queryString, function (error, results, fields) {
+      if (error) {
+        throw error;
+      }
+      console.log('deleted ' + results.affectedRows + ' rows');
+      callback(null, results);
+    });
+    // callback(null, []);
   }
 };
 

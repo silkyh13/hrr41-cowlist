@@ -8,20 +8,23 @@ class App extends React.Component {
     super(props);
     this.state = {data: [], value: '', description: '', currentCow: {}};
 
-    this.handleUserChange = this.handleUserChange.bind(this);
+    this.handleCowChange = this.handleCowChange.bind(this);
     this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.onListItemClick = this.onListItemClick.bind(this);
+    this.deleteData = this.deleteData.bind(this);
   }
+
   onListItemClick(name, description) {
 
-    // alert(name + ' ' +description);
     this.setState({currentCow: {name: name, description: description}})
   }
-  handleUserChange(event) {
+
+  handleCowChange(event) {
     this.setState({value: event.target.value});
   }
+
   handleDescriptionChange(event) {
     this.setState({description: event.target.value});
   }
@@ -44,32 +47,46 @@ class App extends React.Component {
     })
   }
 
-    fetchData () {//fetching data from server
-      fetch('api/cows', {
-        method: 'GET',
-      })
-        .then((items) => {
-          // console.log('does it work?', items.json());
-          return items.json();
+  fetchData () {//fetching the whole  data from server
+    fetch('api/cows', {
+      method: 'GET',
+    })
+      .then((items) => {
+        // console.log('does it work?', items.json());
+        return items.json();
 
-        })
-        .then((cowData) => {
-          this.setState({data: cowData});
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    }
+      })
+      .then((cowData) => {
+        this.setState({data: cowData});
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+  deleteData (name, description) {
+    console.log('bing bong, is dinner time for', name );
+    event.preventDefault();
+    fetch('/api/cows', {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: name,
+        description: description
+      })
+    })
+    .then(() => {
+      this.fetchData();
+    })
+  }
+
 
     componentDidMount() {//runs before render runs only the first time the component is created
       this.fetchData();
     }
 
-    // componentDidUpdate(prevProps, prevState) {//anytime the state changes or properties changes, it will run again.
-    //   if (prevState.currentCow !== this.state.currentCow) {//only updates if we switch to current cow
-    //     this.fetchData();
-    //   }
-    // }
 
   render() {
     let name = this.state.currentCow.name
@@ -79,7 +96,7 @@ class App extends React.Component {
         <form onSubmit={this.handleSubmit}>
         <label>
           Name:
-          <input type="text" value={this.state.value} onChange={this.handleUserChange} />
+          <input type="text" value={this.state.value} onChange={this.handleCowChange} />
         </label>
         <label>
           Description:
@@ -91,7 +108,7 @@ class App extends React.Component {
       <div className="example">{name} {description}</div>
       <div className="list">
         <div><h5><em>Cow List</em>
-        <CowList cows={this.state.data} onClick={this.onListItemClick.bind(this)}/>
+        <CowList cows={this.state.data} onClick={this.onListItemClick.bind(this)} onDelete={this.deleteData.bind(this)} />
         </h5></div>
       </div>
 

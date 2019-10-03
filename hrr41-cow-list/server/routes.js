@@ -6,5 +6,6 @@ router.get('/cows', controller.cows.get);
 
 router.post('/cows', controller.cows.post);
 
+router.delete('/cows', controller.cows.delete);
 module.exports = router;
 
