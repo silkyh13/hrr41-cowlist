@@ -43,10 +43,20 @@ var models = {
       if (error) {
         throw error;
       }
-      console.log('deleted ' + results.affectedRows + ' rows');
+      // console.log('deleted ' + results.affectedRows + ' rows');
       callback(null, results);
     });
-    // callback(null, []);
+  },
+  put: function (data, callback) {
+    console.log('did I make it here?');
+    var queryString = 'update cows set name =' + db.escape(data.name) + 'where id =' + db.escape(data.id);
+    db.query(queryString, function (error, results, fields) {
+      if (error) {
+        throw error;
+      }
+      console.log('changed ' + results.changedRows + ' rows');
+      callback(null, results);
+    });
   }
 };
 

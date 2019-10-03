@@ -33,6 +33,15 @@ var controllers = {
         res.writeHead(200);
         res.end();
       });
+    },
+    put: function (req, res) {
+      models.put(req.body, (err, data) => {
+        if (err) {
+          throw err;
+        }
+        res.writeHead(200);
+        res.end();
+      });
     }
   }
 };
